@@ -2,20 +2,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector("form");
     const messagesDiv = document.getElementById("messages");
     const input = form.querySelector("input[name='content']");
-    
 
+    console.log("frontend-js chargé ✅");
 
     form.addEventListener("submit", function (e) {
-        e.preventDefault(); // empêche le rechargement
+        e.preventDefault();
 
         const message = input.value.trim();
-        if (message === "") return;
+        if (!message) return;
 
         fetch("", {
             method: "POST",
             headers: {
                 "X-Requested-With": "XMLHttpRequest",
-                "X-CSRFToken": getCSRFToken(),
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             body: "content=" + encodeURIComponent(message)
@@ -31,8 +31,24 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+});
 
-    function getCSRFToken() {
-        return document.querySelector("[name=csrfmiddlewaretoken]").value;
+document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("delete-btn")) {
+        const messageId = e.target.dataset.id;
+
+        fetch(`/messages/${messageId}/delete/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                e.target.parentElement.remove();
+            }
+        });
     }
 });

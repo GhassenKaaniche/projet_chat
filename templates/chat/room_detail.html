@@ -13,17 +13,24 @@
 <!-- Zone des messages -->
 <div id="messages" style="border:1px solid #ccc; padding:10px; height:300px; overflow:auto;">
     {% for message in messages %}
-        <p>
+        <p data-id="{{ message.id }}">
             <strong>{{ message.user.username }}</strong> :
             {{ message.content }}
+
+            {% if message.user == request.user %}
+                <button class="delete-btn" data-id="{{ message.id }}">
+                    ❌
+                </button>
+            {% endif %}
         </p>
     {% empty %}
         <p><em>Aucun message pour l’instant</em></p>
     {% endfor %}
 </div>
 
+
 <!-- Formulaire d'envoi -->
-<form method="post" style="margin-top:10px;">
+<form id="chat-form" method="post" style="margin-top:10px;">
     {% csrf_token %}
     <input
         type="text"
