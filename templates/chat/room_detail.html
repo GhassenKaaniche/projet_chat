@@ -1,8 +1,25 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}{{ room.name }}{% endblock %}
+
 {% block content %}
   <h2>Salon : {{ room.name }}</h2>
   <p><a href="{% url 'room_list' %}">← Retour aux salons</a></p>
 
-  <p>Page salon OK ✅ (le chat arrive à l’étape suivante)</p>
+  <div id="messages" style="border:1px solid #ddd;height:320px;overflow:auto;padding:10px;margin-bottom:12px;"></div>
+
+  <form id="sendForm">
+    {% csrf_token %}
+    <input id="msgInput" placeholder="Ton message..." style="width:75%;" maxlength="1000" />
+    <button type="submit">Envoyer</button>
+  </form>
+
+  <!-- 1) charge le JS -->
+  <script src="{% static 'js/chat.js' %}"></script>
+
+  <!-- 2) puis démarre le chat -->
+  <script>
+    window.CSRF_TOKEN = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    startChat(Number("{{ room.id }}"));
+  </script>
 {% endblock %}
