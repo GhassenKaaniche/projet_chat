@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Salons{% endblock %}
+{% block content %}
+  <h2>Salons</h2>
+  <p><a href="{% url 'room_create' %}">+ Créer un salon</a></p>
+
+  {% if rooms %}
+    <ul>
+      {% for r in rooms %}
+        <li><a href="{% url 'room_detail' r.id %}">{{ r.name }}</a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Aucun salon pour l’instant.</p>
+  {% endif %}
+{% endblock %}
