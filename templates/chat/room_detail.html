@@ -7,10 +7,8 @@
 <h2>Salon : {{ room.name }}</h2>
 
 <a href="{% url 'room_list' %}">← Retour aux salons</a>
-
 <hr>
 
-<!-- Zone des messages -->
 <div id="messages" style="border:1px solid #ccc; padding:10px; height:300px; overflow:auto;">
     {% for message in messages %}
         <p data-id="{{ message.id }}">
@@ -18,9 +16,7 @@
             {{ message.content }}
 
             {% if message.user == request.user %}
-                <button class="delete-btn" data-id="{{ message.id }}">
-                    ❌
-                </button>
+                <button class="delete-btn" data-id="{{ message.id }}">❌</button>
             {% endif %}
         </p>
     {% empty %}
@@ -28,8 +24,6 @@
     {% endfor %}
 </div>
 
-
-<!-- Formulaire d'envoi -->
 <form id="chat-form" method="post" style="margin-top:10px;">
     {% csrf_token %}
     <input
@@ -42,6 +36,5 @@
     <button type="submit">Envoyer</button>
 </form>
 
-<!-- JS -->
 <script src="{% static 'chat/chat.js' %}"></script>
 {% endblock %}
