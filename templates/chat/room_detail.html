@@ -1,8 +1,40 @@
 {% extends "base.html" %}
-{% block title %}{{ room.name }}{% endblock %}
-{% block content %}
-  <h2>Salon : {{ room.name }}</h2>
-  <p><a href="{% url 'room_list' %}">← Retour aux salons</a></p>
+{% load static %}
 
-  <p>Page salon OK ✅ (le chat arrive à l’étape suivante)</p>
+{% block title %}{{ room.name }}{% endblock %}
+
+{% block content %}
+<h2>Salon : {{ room.name }}</h2>
+
+<a href="{% url 'room_list' %}">← Retour aux salons</a>
+
+<hr>
+
+<!-- Zone des messages -->
+<div id="messages" style="border:1px solid #ccc; padding:10px; height:300px; overflow:auto;">
+    {% for message in messages %}
+        <p>
+            <strong>{{ message.user.username }}</strong> :
+            {{ message.content }}
+        </p>
+    {% empty %}
+        <p><em>Aucun message pour l’instant</em></p>
+    {% endfor %}
+</div>
+
+<!-- Formulaire d'envoi -->
+<form method="post" style="margin-top:10px;">
+    {% csrf_token %}
+    <input
+        type="text"
+        name="content"
+        placeholder="Votre message..."
+        style="width:80%;"
+        required
+    >
+    <button type="submit">Envoyer</button>
+</form>
+
+<!-- JS -->
+<script src="{% static 'chat/chat.js' %}"></script>
 {% endblock %}
