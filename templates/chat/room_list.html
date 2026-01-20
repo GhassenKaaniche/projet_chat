@@ -1,16 +1,32 @@
 {% extends "base.html" %}
 {% block title %}Salons{% endblock %}
+
 {% block content %}
-  <h2>Salons</h2>
-  <p><a href="{% url 'room_create' %}">+ Créer un salon</a></p>
+<div class="max-w-3xl mx-auto bg-white rounded-xl shadow p-6">
+
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-semibold">Salons 💬</h2>
+
+    <a href="{% url 'room_create' %}"
+       class="bg-primary text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+      + Nouveau salon
+    </a>
+  </div>
 
   {% if rooms %}
-    <ul>
+    <ul class="divide-y">
       {% for r in rooms %}
-        <li><a href="{% url 'room_detail' r.id %}">{{ r.name }}</a></li>
+        <li class="py-4 flex justify-between items-center">
+          <span class="font-medium">{{ r.name }}</span>
+          <a href="{% url 'room_detail' r.id %}"
+             class="text-primary hover:underline">
+            Rejoindre →
+          </a>
+        </li>
       {% endfor %}
     </ul>
   {% else %}
-    <p>Aucun salon pour l’instant.</p>
+    <p class="text-gray-500 text-center">Aucun salon</p>
   {% endif %}
+</div>
 {% endblock %}

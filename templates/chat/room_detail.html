@@ -1,40 +1,91 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block title %}{{ room.name }}{% endblock %}
 
 {% block content %}
-<h2>Salon : {{ room.name }}</h2>
 
-<a href="{% url 'room_list' %}">← Retour aux salons</a>
-<hr>
+<div class="max-w-4xl mx-auto bg-white rounded-xl shadow">
 
-<div id="messages" style="border:1px solid #ccc; padding:10px; height:300px; overflow:auto;">
-    {% for message in messages %}
-        <p data-id="{{ message.id }}">
-            <strong>{{ message.user.username }}</strong> :
-            {{ message.content }}
+  <!-- HEADER -->
+  <div class="border-b px-6 py-4 flex items-center justify-between">
+    <div>
+      <h2 class="text-lg font-semibold">💬 {{ room.name }}</h2>
+      <a href="{% url 'room_list' %}"
+         class="text-sm text-gray-500 hover:underline">
+        ← Retour aux salons
+      </a>
+    </div>
+  </div>
+
+  <!-- MESSAGES -->
+  <div id="messages"
+       class="p-6 h-[420px] overflow-y-auto bg-gray-50 space-y-4">
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="flex {% if message.user == request.user %}justify-end{% else %}justify-start{% endif %}">
+          
+          <div class="max-w-[70%] rounded-xl px-4 py-2
+            {% if message.user == request.user %}
+              bg-primary text-white
+            {% else %}
+              bg-white border
+            {% endif %}">
+
+            <div class="text-xs font-semibold mb-1 opacity-80">
+              {{ message.user.username }}
+            </div>
+
+            <div class="text-sm">
+              {{ message.content }}
+            </div>
 
             {% if message.user == request.user %}
-                <button class="delete-btn" data-id="{{ message.id }}">❌</button>
+              <button
+                class="delete-btn text-xs text-red-200 hover:text-red-400 mt-1"
+                data-id="{{ message.id }}">
+                Supprimer
+              </button>
             {% endif %}
-        </p>
-    {% empty %}
-        <p><em>Aucun message pour l’instant</em></p>
-    {% endfor %}
-</div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p id="empty-msg" class="text-center text-gray-400">
+        Aucun message pour l’instant
+      </p>
+    {% endif %}
 
-<form id="chat-form" method="post" style="margin-top:10px;">
+  </div>
+  <p class="text-xs text-gray-400 mt-1">
+  {{ message.created_at|date:"H:i" }}
+</p>
+
+
+  <!-- INPUT -->
+  <form id="chat-form"
+        method="post"
+        class="flex items-center gap-3 px-4 py-4 border-t bg-white">
     {% csrf_token %}
+
     <input
-        type="text"
-        name="content"
-        placeholder="Votre message..."
-        style="width:80%;"
-        required
-    >
-    <button type="submit">Envoyer</button>
-</form>
+      type="text"
+      name="content"
+      placeholder="Écrire un message..."
+      class="flex-1 border rounded-full px-5 py-2 focus:outline-none focus:ring focus:ring-indigo-200"
+      required>
+
+    <button
+      type="submit"
+      class="bg-primary text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition">
+      Envoyer
+    </button>
+  </form>
+
+</div>
+<div class="message-animate inline-block px-4 py-2 rounded-lg max-w-[75%]">
 
 <script src="{% static 'chat/chat.js' %}"></script>
+
+
 {% endblock %}

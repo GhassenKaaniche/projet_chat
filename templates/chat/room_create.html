@@ -1,16 +1,40 @@
 {% extends "base.html" %}
 {% block title %}Créer un salon{% endblock %}
-{% block content %}
-  <h2>Créer un salon</h2>
-  {% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
 
-  <form method="post">
+{% block content %}
+
+<div class="max-w-md mx-auto bg-white rounded-xl shadow p-6">
+
+  <h2 class="text-xl font-semibold mb-4">Créer un nouveau salon</h2>
+
+  {% if error %}
+    <p class="text-red-500 mb-3">{{ error }}</p>
+  {% endif %}
+
+  <form method="post" class="space-y-4">
     {% csrf_token %}
-    <label>Nom du salon</label><br/>
-    <input name="name" maxlength="80" required />
-    <div style="margin-top:12px;">
-      <button type="submit">Créer</button>
-      <a style="margin-left:10px;" href="{% url 'room_list' %}">Annuler</a>
+
+    <input
+      name="name"
+      maxlength="80"
+      required
+      placeholder="Nom du salon"
+      class="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring focus:ring-indigo-200">
+
+    <div class="flex items-center justify-between">
+      <button
+        type="submit"
+        class="bg-primary text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
+        Créer
+      </button>
+
+      <a href="{% url 'room_list' %}"
+         class="text-gray-500 hover:underline">
+        Annuler
+      </a>
     </div>
   </form>
+
+</div>
+
 {% endblock %}
