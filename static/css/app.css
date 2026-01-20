@@ -1,0 +1,330 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+/* IMPORTANT: sur les pages auth, on veut 0 padding dans main */
+main { padding: 0 !important; }
+
+:root{
+  --bg1: #2f7bd8;
+  --bg2: #6a5bd6;
+  --card: rgba(255,255,255,0.92);
+  --card2: rgba(255,255,255,0.82);
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: rgba(15, 23, 42, 0.10);
+  --shadow: 0 18px 55px rgba(2,6,23,0.18);
+  --shadow2: 0 10px 30px rgba(2,6,23,0.12);
+  --radius: 18px;
+}
+
+* { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+body.theme-a{
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(1100px 520px at 18% 12%, rgba(255,255,255,0.30), transparent 60%),
+    radial-gradient(900px 480px at 82% 80%, rgba(255,255,255,0.18), transparent 55%),
+    linear-gradient(120deg, var(--bg1) 0%, var(--bg2) 100%);
+}
+
+/* Topbar */
+.topbar-a{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(10, 15, 30, 0.22);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.20);
+}
+
+.topbar-inner-a{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 14px 0;
+}
+
+.brand-a{
+  color: #fff;
+  text-decoration:none;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: 18px;
+}
+
+.chip-a{
+  color: rgba(255,255,255,0.92);
+  border: 1px solid rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.12);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+/* Cards */
+.card-a{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.card-a.soft{
+  background: var(--card2);
+  box-shadow: var(--shadow2);
+}
+
+.h-title{
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.h-sub{
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* Inputs */
+.input-a{
+  border-radius: 14px !important;
+  border: 1px solid rgba(15,23,42,0.12) !important;
+  background: rgba(255,255,255,0.92) !important;
+}
+.input-a:focus{
+  border-color: rgba(37,99,235,0.35) !important;
+  box-shadow: 0 0 0 5px rgba(37,99,235,0.12) !important;
+}
+
+/* Rooms list */
+.room-row-a{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(15,23,42,0.10);
+  background: rgba(255,255,255,0.88);
+  text-decoration: none;
+  color: var(--text);
+}
+
+.room-row-a:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(2,6,23,0.10);
+}
+
+.room-meta{
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Chat */
+.chat-shell{
+  overflow:hidden;
+}
+
+.chat-header{
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(15,23,42,0.10);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background: rgba(255,255,255,0.75);
+}
+
+.chat-title .name{
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.chat-title .sub{
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.chat-messages{
+  height: 520px;
+  overflow:auto;
+  padding: 18px;
+  background:
+    radial-gradient(900px 320px at 10% 0%, rgba(37,99,235,0.06), transparent 55%),
+    radial-gradient(900px 320px at 90% 100%, rgba(106,91,214,0.06), transparent 55%),
+    #f8fafc;
+}
+
+.bubble{
+  position: relative;
+  max-width: 74%;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(15,23,42,0.08);
+  box-shadow: 0 6px 16px rgba(2,6,23,0.06);
+  margin-bottom: 10px;
+}
+
+.bubble .meta{
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.bubble.me{
+  margin-left: auto;
+  background: rgba(37,99,235,0.10);
+  border-color: rgba(37,99,235,0.18);
+}
+
+.chat-composer{
+  padding: 12px;
+  border-top: 1px solid rgba(15,23,42,0.10);
+  background: rgba(255,255,255,0.85);
+}
+
+.emoji-picker{
+  background: #fff;
+  border: 1px solid rgba(15,23,42,0.12);
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: 0 10px 22px rgba(2,6,23,0.10);
+}
+
+.emoji{
+  font-size: 22px;
+  cursor: pointer;
+  padding: 6px 8px;
+  display: inline-block;
+  border-radius: 12px;
+  user-select: none;
+}
+.emoji:hover{
+  background: rgba(15,23,42,0.06);
+}
+
+/* Hover delete (trash) */
+.msg-actions{
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: 0.15s ease;
+}
+
+.bubble:hover .msg-actions{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.btn-del-icon{
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  border: 1px solid rgba(15,23,42,0.12);
+  background: rgba(255,255,255,0.85);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-del-icon:hover{
+  border-color: rgba(239,68,68,0.25);
+  background: rgba(239,68,68,0.08);
+}
+
+/* ===== AUTH (centrage fiable) ===== */
+.auth-bg{
+  min-height: 100svh;
+  background: linear-gradient(120deg, #3b82f6 0%, #6366f1 55%, #7c3aed 100%);
+}
+
+/* main.auth-main = LA vraie zone qui doit centrer la carte */
+main.auth-main{
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 24px !important;
+}
+
+.auth-card{
+  width: 380px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.18);
+  overflow: hidden;
+}
+
+.auth-head{
+  padding: 20px 22px 10px 22px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.auth-title{
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.auth-body{
+  padding: 18px 22px 12px 22px;
+}
+
+.auth-field{
+  margin-top: 14px;
+}
+
+.auth-input{
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 10px 4px;
+  font-size: 14px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.auth-input::placeholder{
+  color: #9ca3af;
+}
+
+.auth-input:focus{
+  border-bottom-color: #3b82f6;
+}
+
+.auth-btn{
+  width: 100%;
+  margin-top: 18px;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 600;
+  color: white;
+  background: #2a8bd6;
+  box-shadow: 0 10px 24px rgba(42,139,214,0.35);
+}
+
+.auth-btn:hover{
+  filter: brightness(0.98);
+}
+
+.auth-foot{
+  text-align:center;
+  padding: 10px 22px 18px 22px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.auth-foot a{
+  color: #2a8bd6;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-foot a:hover{
+  text-decoration: underline;
+}

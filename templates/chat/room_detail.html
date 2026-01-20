@@ -3,23 +3,71 @@
 {% block title %}{{ room.name }}{% endblock %}
 
 {% block content %}
-  <h2>Salon : {{ room.name }}</h2>
-  <p><a href="{% url 'room_list' %}">← Retour aux salons</a></p>
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-10 col-xl-9">
 
-  <div id="messages" style="border:1px solid #ddd;height:320px;overflow:auto;padding:10px;margin-bottom:12px;"></div>
+    {% if can_moderate %}
+      <div class="card-a soft p-3 mb-3">
+        <div class="fw-semibold mb-2">Modération</div>
+        <div class="row g-2">
+          <div class="col-12 col-md-6">
+            <div class="input-group flex-nowrap">
+              <span class="input-group-text">Ban</span>
+              <input id="banUser" class="form-control input-a" placeholder="username" />
+              <button id="banBtn" class="btn btn-outline-danger" type="button">Bannir</button>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="input-group flex-nowrap">
+              <span class="input-group-text">Unban</span>
+              <input id="unbanUser" class="form-control input-a" placeholder="username" />
+              <button id="unbanBtn" class="btn btn-outline-success" type="button">Débannir</button>
+            </div>
+          </div>
+        </div>
+        <div class="text-muted small mt-2">
+          Les rôles mod/owner peuvent modérer et gérer les bans.
+        </div>
+      </div>
+    {% endif %}
 
-  <form id="sendForm">
-    {% csrf_token %}
-    <input id="msgInput" placeholder="Ton message..." style="width:75%;" maxlength="1000" />
-    <button type="submit">Envoyer</button>
-  </form>
+    <div class="card-a chat-shell">
+      <div class="chat-header">
+        <div class="chat-title">
+          <div class="name"># {{ room.name }}</div>
+          <div class="sub">Style WhatsApp Web • quasi temps réel</div>
+        </div>
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'room_list' %}">← Salons</a>
+      </div>
 
-  <!-- 1) charge le JS -->
-  <script src="{% static 'js/chat.js' %}"></script>
+      <div id="messages" class="chat-messages"></div>
 
-  <!-- 2) puis démarre le chat -->
-  <script>
-    window.CSRF_TOKEN = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-    startChat(Number("{{ room.id }}"));
-  </script>
+      <div class="chat-composer">
+        <form id="sendForm" class="d-flex gap-2 align-items-center">
+          {% csrf_token %}
+          <button id="emojiBtn" type="button" class="btn btn-outline-secondary" title="Emojis">😀</button>
+          <input id="msgInput" class="form-control input-a" placeholder="Écris un message…" maxlength="1000" />
+          <button type="submit" class="btn btn-primary">Envoyer</button>
+        </form>
+
+        <div id="emojiPicker" class="emoji-picker mt-2" style="display:none;">
+          <span class="emoji">😀</span><span class="emoji">😁</span><span class="emoji">😂</span><span class="emoji">🤣</span>
+          <span class="emoji">😊</span><span class="emoji">😍</span><span class="emoji">😘</span><span class="emoji">😎</span>
+          <span class="emoji">🤔</span><span class="emoji">😢</span><span class="emoji">😡</span><span class="emoji">👍</span>
+          <span class="emoji">👎</span><span class="emoji">🙏</span><span class="emoji">🔥</span><span class="emoji">✅</span>
+          <span class="emoji">❌</span><span class="emoji">🎉</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  window.ME_USERNAME = "{{ me_username|escapejs }}";
+</script>
+<script src="{% static 'js/chat.js' %}"></script>
+<script>
+  startChat(Number("{{ room.id }}"));
+</script>
 {% endblock %}

@@ -1,16 +1,34 @@
 {% extends "base.html" %}
 {% block title %}Salons{% endblock %}
-{% block content %}
-  <h2>Salons</h2>
-  <p><a href="{% url 'room_create' %}">+ Créer un salon</a></p>
 
-  {% if rooms %}
-    <ul>
-      {% for r in rooms %}
-        <li><a href="{% url 'room_detail' r.id %}">{{ r.name }}</a></li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>Aucun salon pour l’instant.</p>
-  {% endif %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-10 col-xl-8">
+    <div class="card-a p-4">
+      <div class="d-flex align-items-end justify-content-between">
+        <div>
+          <h2 class="h-title">Salons</h2>
+          <div class="h-sub">Rejoins un salon ou crée-en un nouveau.</div>
+        </div>
+        <a class="btn btn-primary" href="{% url 'room_create' %}">+ Nouveau</a>
+      </div>
+
+      <div class="mt-4 d-grid gap-2">
+        {% if rooms %}
+          {% for r in rooms %}
+            <a class="room-row-a" href="{% url 'room_detail' r.id %}">
+              <div>
+                <div class="fw-semibold"># {{ r.name }}</div>
+                <div class="room-meta">Clique pour entrer</div>
+              </div>
+              <span class="btn btn-sm btn-outline-secondary">Entrer</span>
+            </a>
+          {% endfor %}
+        {% else %}
+          <div class="text-muted">Aucun salon. Crée le premier 🙂</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

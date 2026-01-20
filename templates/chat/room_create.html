@@ -1,16 +1,27 @@
 {% extends "base.html" %}
 {% block title %}Créer un salon{% endblock %}
-{% block content %}
-  <h2>Créer un salon</h2>
-  {% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
 
-  <form method="post">
-    {% csrf_token %}
-    <label>Nom du salon</label><br/>
-    <input name="name" maxlength="80" required />
-    <div style="margin-top:12px;">
-      <button type="submit">Créer</button>
-      <a style="margin-left:10px;" href="{% url 'room_list' %}">Annuler</a>
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-7 col-xl-6">
+    <div class="card-a p-4">
+      <h2 class="h-title">Créer un salon</h2>
+      <div class="h-sub">Ex: general, ensisa, projets…</div>
+
+      {% if error %}
+        <div class="alert alert-danger mt-3 py-2">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" class="mt-3 d-flex gap-2">
+        {% csrf_token %}
+        <input class="form-control input-a" name="name" maxlength="80" placeholder="Nom du salon" required />
+        <button class="btn btn-primary" type="submit">Créer</button>
+      </form>
+
+      <div class="mt-3">
+        <a href="{% url 'room_list' %}" class="text-decoration-none text-white-50">← Retour</a>
+      </div>
     </div>
-  </form>
+  </div>
+</div>
 {% endblock %}

@@ -1,18 +1,38 @@
 {% extends "base.html" %}
 {% block title %}Signup{% endblock %}
+
+{% block nav %}{% endblock %}
+{% block body_class %}auth-bg{% endblock %}
+{% block main_class %}auth-main{% endblock %}
+
 {% block content %}
-  <h2>Créer un compte</h2>
-  {% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
-  <form method="post">
-    {% csrf_token %}
-    <div>
-      <label>Username</label><br/>
-      <input name="username" required />
+  <div class="auth-card">
+    <div class="auth-head">
+      <h1 class="auth-title">Signup</h1>
     </div>
-    <div style="margin-top:10px;">
-      <label>Mot de passe</label><br/>
-      <input name="password" type="password" required />
+
+    <div class="auth-body">
+      {% if error %}
+        <div class="alert alert-danger py-2 mb-3">{{ error }}</div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="auth-field">
+          <input class="auth-input" name="username" placeholder="Username" required />
+        </div>
+
+        <div class="auth-field">
+          <input class="auth-input" name="password" type="password" placeholder="Password" required />
+        </div>
+
+        <button class="auth-btn" type="submit">Signup</button>
+      </form>
     </div>
-    <button style="margin-top:12px;" type="submit">Créer</button>
-  </form>
+
+    <div class="auth-foot">
+      Already a member? <a href="{% url 'login' %}">Login</a>
+    </div>
+  </div>
 {% endblock %}

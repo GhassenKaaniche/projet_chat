@@ -8,5 +8,9 @@ urlpatterns = [
     
     path("api/rooms/<int:room_id>/messages/", views.api_messages, name="api_messages"),
     path("api/messages/<int:msg_id>/delete/", views.api_delete_message, name="api_delete_message"),
+    
+    path("api/rooms/<int:room_id>/ban/", views.api_ban_user, name="api_ban_user"),
+    path("api/rooms/<int:room_id>/unban/", views.api_unban_user, name="api_unban_user"),
+
 
 ]
