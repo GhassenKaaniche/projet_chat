@@ -1,19 +1,16 @@
 let lastId = 0;
 let polling = null;
 
-// ---------- CSRF (cookie) ----------
+// ---------- CSRF ----------
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(";").shift();
   return null;
 }
+function csrfToken() { return getCookie("csrftoken"); }
 
-function csrfToken() {
-  return getCookie("csrftoken");
-}
-
-// ---------- Toast (Bootstrap) ----------
+// ---------- Toast ----------
 function showToast(message, variant = "primary") {
   const container = document.getElementById("toastContainer");
   if (!container) return;
@@ -30,7 +27,6 @@ function showToast(message, variant = "primary") {
       <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
     </div>
   `;
-
   container.appendChild(el);
   const toast = new bootstrap.Toast(el, { delay: 2200 });
   toast.show();
@@ -54,11 +50,9 @@ function renderMessage(m) {
 
   let actions = "";
   if (m.can_delete && !m.is_deleted) {
-    actions = `
-      <div class="msg-actions">
-        <button class="btn-del-icon btn-del" data-id="${m.id}" title="Supprimer">🗑️</button>
-      </div>
-    `;
+    actions = `<div class="msg-actions">
+      <button class="btn-del-icon btn-del" data-id="${m.id}" title="Supprimer">🗑️</button>
+    </div>`;
   }
 
   return `<div class="bubble ${isMe ? "me" : ""}" data-id="${m.id}">
@@ -73,7 +67,7 @@ function fetchMessages(roomId) {
   $.getJSON(`/api/rooms/${roomId}/messages/?after_id=${lastId}`)
     .done((res) => {
       const msgs = res.messages || [];
-      if (msgs.length === 0) return;
+      if (!msgs.length) return;
 
       for (const m of msgs) {
         $("#messages").append(renderMessage(m));
@@ -130,14 +124,11 @@ function unbanUser(roomId, username) {
   });
 }
 
-// ---------- Emoji helpers ----------
+// ---------- Emoji ----------
 function insertAtCursor(inputEl, text) {
   const start = inputEl.selectionStart ?? inputEl.value.length;
   const end = inputEl.selectionEnd ?? inputEl.value.length;
-  const before = inputEl.value.slice(0, start);
-  const after = inputEl.value.slice(end);
-  inputEl.value = before + text + after;
-
+  inputEl.value = inputEl.value.slice(0, start) + text + inputEl.value.slice(end);
   const newPos = start + text.length;
   inputEl.setSelectionRange(newPos, newPos);
   inputEl.focus();
@@ -148,8 +139,15 @@ function startChat(roomId) {
   fetchMessages(roomId);
   polling = setInterval(() => fetchMessages(roomId), 1200);
 
-  $("#sendForm").on("submit", (e) => {
+  // ---- Message submit ----
+  $("#sendForm").off("submit").on("submit", (e) => {
     e.preventDefault();
+
+    if (window.IS_BANNED) {
+      showToast("❌ Vous êtes banni, impossible d'envoyer un message.", "danger");
+      return;
+    }
+
     const content = ($("#msgInput").val() || "").trim();
     if (!content) return;
 
@@ -161,7 +159,8 @@ function startChat(roomId) {
       .fail((xhr) => showToast("Erreur envoi: " + xhr.status, "danger"));
   });
 
-  $("#messages").on("click", ".btn-del", function () {
+  // ---- Delete message ----
+  $("#messages").off("click", ".btn-del").on("click", ".btn-del", function () {
     const id = $(this).data("id");
     deleteMessage(id)
       .done(() => {
@@ -173,7 +172,8 @@ function startChat(roomId) {
       .fail((xhr) => showToast("Erreur suppression: " + xhr.status, "danger"));
   });
 
-  $(document).on("click", "#banBtn", () => {
+  // ---- Ban / Unban ----
+  $(document).off("click", "#banBtn").on("click", "#banBtn", () => {
     const username = ($("#banUser").val() || "").trim();
     if (!username) return showToast("Username requis", "secondary");
 
@@ -182,7 +182,7 @@ function startChat(roomId) {
       .fail((xhr) => showToast("Erreur ban: " + xhr.status, "danger"));
   });
 
-  $(document).on("click", "#unbanBtn", () => {
+  $(document).off("click", "#unbanBtn").on("click", "#unbanBtn", () => {
     const username = ($("#unbanUser").val() || "").trim();
     if (!username) return showToast("Username requis", "secondary");
 
@@ -191,31 +191,33 @@ function startChat(roomId) {
       .fail((xhr) => showToast("Erreur unban: " + xhr.status, "danger"));
   });
 
-  // Emojis
-  $(document).on("click", "#emojiBtn", () => {
+  // ---- Emojis ----
+  $(document).off("click", "#emojiBtn").on("click", "#emojiBtn", () => {
     $("#emojiPicker").toggle();
   });
 
-  $(document).on("click", "#emojiPicker .emoji", function () {
+  $(document).off("click", "#emojiPicker .emoji").on("click", "#emojiPicker .emoji", function () {
     const emoji = $(this).text();
     const input = document.getElementById("msgInput");
     if (!input) return;
     insertAtCursor(input, emoji);
   });
 
-  // fermer emoji picker si clic ailleurs
-  $(document).on("click", (e) => {
+  // ---- Close emoji picker if click outside ----
+  $(document).off("click.chat").on("click.chat", (e) => {
     const picker = document.getElementById("emojiPicker");
     const btn = document.getElementById("emojiBtn");
     if (!picker || !btn) return;
 
-    const clickedInsidePicker = picker.contains(e.target);
-    const clickedBtn = btn.contains(e.target);
-
-    if (!clickedInsidePicker && !clickedBtn) {
+    if (!picker.contains(e.target) && !btn.contains(e.target)) {
       $("#emojiPicker").hide();
     }
   });
+
+  // ---- Show banned toast ----
+  if (window.IS_BANNED) {
+    showToast("⚠️ Vous êtes banni dans ce salon, vous ne pouvez rien écrire.", "danger");
+  }
 }
 
 window.startChat = startChat;

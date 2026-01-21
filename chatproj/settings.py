@@ -20,12 +20,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-e2pb*=+u7n9gkv&h_+!v!fx64&_gq7-^@=r_dxq2w6@g6liu%^'
+# SECRET_KEY = 'django-insecure-e2pb*=+u7n9gkv&h_+!v!fx64&_gq7-^@=r_dxq2w6@g6liu%^'
+import os
+
+SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
+DEBUG = int(os.environ.get('DEBUG', default=1))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# DEBUG = False
 
-ALLOWED_HOSTS = ['*']  # pour le test, plus tard mettre ton URL exact
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'chat-ensisa.onrender.com',
+]
 
 
 

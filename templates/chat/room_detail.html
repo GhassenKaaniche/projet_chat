@@ -12,27 +12,22 @@
         <div class="row g-2">
           <div class="col-12 col-md-6">
             <div class="input-group flex-nowrap">
-              <span class="input-group-text">Ban</span>
-              <input id="banUser" class="form-control input-a" placeholder="username" />
+              <input id="banUser" class="form-control input-a" placeholder="Nom d'utilisateur" />
               <button id="banBtn" class="btn btn-outline-danger" type="button">Bannir</button>
             </div>
           </div>
           <div class="col-12 col-md-6">
             <div class="input-group flex-nowrap">
-              <span class="input-group-text">Unban</span>
-              <input id="unbanUser" class="form-control input-a" placeholder="username" />
+              <input id="unbanUser" class="form-control input-a" placeholder="Nom d'utilisateur" />
               <button id="unbanBtn" class="btn btn-outline-success" type="button">Débannir</button>
             </div>
           </div>
-        </div>
-        <div class="text-muted small mt-2">
-          Les rôles mod/owner peuvent modérer et gérer les bans.
         </div>
       </div>
     {% endif %}
 
     <div class="card-a chat-shell">
-      <div class="chat-header">
+      <div class="chat-header d-flex justify-content-between align-items-center">
         <div class="chat-title">
           <div class="name"># {{ room.name }}</div>
         </div>
@@ -41,15 +36,22 @@
 
       <div id="messages" class="chat-messages"></div>
 
-      <div class="chat-composer">
-        <form id="sendForm" class="d-flex gap-2 align-items-center">
-          {% csrf_token %}
-          <button id="emojiBtn" type="button" class="btn btn-outline-secondary" title="Emojis">😀</button>
-          <input id="msgInput" class="form-control input-a" placeholder="Écris un message…" maxlength="1000" />
-          <button type="submit" class="btn btn-primary">Envoyer</button>
-        </form>
+      <div class="chat-composer mt-2">
+        {% if is_banned %}
+          <input class="form-control input-a text-danger fw-bold" 
+                 value="❌ Vous êtes banni, impossible d'envoyer des messages." 
+                 disabled />
+        {% else %}
+          <form id="sendForm" class="d-flex gap-2 align-items-center">
+            {% csrf_token %}
+            <button id="emojiBtn" type="button" class="btn btn-outline-secondary" title="Emojis">😀</button>
+            <input id="msgInput" class="form-control input-a" placeholder="Écris un message…" maxlength="1000" />
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+          </form>
+        {% endif %}
 
         <div id="emojiPicker" class="emoji-picker mt-2" style="display:none;">
+          <!-- emojis -->
           <span class="emoji">😀</span><span class="emoji">😁</span><span class="emoji">😂</span><span class="emoji">🤣</span>
           <span class="emoji">😊</span><span class="emoji">😍</span><span class="emoji">😘</span><span class="emoji">😎</span>
           <span class="emoji">🤔</span><span class="emoji">😢</span><span class="emoji">😡</span><span class="emoji">👍</span>
@@ -62,11 +64,20 @@
   </div>
 </div>
 
+<!-- Toast container -->
+<div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1055;"></div>
+
+<!-- Scripts -->
+{{ is_banned|json_script:"is_banned" }}
 <script>
   window.ME_USERNAME = "{{ me_username|escapejs }}";
+  // Récupère le booléen depuis le JSON
+  window.IS_BANNED = JSON.parse(document.getElementById("is_banned").textContent);
 </script>
+
 <script src="{% static 'js/chat.js' %}"></script>
 <script>
   startChat(Number("{{ room.id }}"));
 </script>
+
 {% endblock %}

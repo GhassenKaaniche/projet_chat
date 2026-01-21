@@ -47,20 +47,22 @@ def room_create(request):
 def room_detail(request, room_id):
     room = get_object_or_404(Room, id=room_id)
 
-    if is_banned(request.user, room):
-        return HttpResponseForbidden("Banned from this room.")
-
     Membership.objects.get_or_create(
         user=request.user,
         room=room,
         defaults={"role": Membership.ROLE_MEMBER},
     )
 
+    banned = is_banned(request.user, room)
     return render(request, "chat/room_detail.html", {
         "room": room,
         "can_moderate": can_moderate(request.user, room),
         "me_username": request.user.username,
+        "is_banned": is_banned(request.user, room),
+
     })
+
+
 
 
 @login_required
